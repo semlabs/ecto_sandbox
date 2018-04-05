@@ -4,16 +4,20 @@ defmodule EctoSandbox.Test do
   alias EctoSandbox.User
 
   test "test async write" do
-    Server.store("foo")
+    Server.store("1")
 
-    assert %User{} = Repo.insert!(%User{name: "bar"})
+    assert %User{} = Repo.insert!(%User{name: "1.1"})
   end
 
   test "test wait" do
-    Process.sleep(1000)
+    Server.store("2")
 
-    Server.store("1")
+    assert %User{} = Repo.insert!(%User{name: "2.1"})
+  end
 
-    assert %User{} = Repo.insert!(%User{name: "2"})
+  test "test three" do
+    Server.store("3")
+
+    assert %User{} = Repo.insert!(%User{name: "3.1"})
   end
 end
