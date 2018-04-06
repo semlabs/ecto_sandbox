@@ -1,5 +1,6 @@
 defmodule EctoSandbox.Application do
   use Application
+  alias EctoSandbox.ServerSupervisor
 
   def start(_type, _args) do
     import Supervisor.Spec
@@ -7,7 +8,7 @@ defmodule EctoSandbox.Application do
     children = [
       supervisor(EctoSandbox.Repo, []),
       supervisor(EctoSandboxWeb.Endpoint, []),
-      worker(Server, [])
+      supervisor(ServerSupervisor, [])
     ]
 
     opts = [strategy: :one_for_one, name: EctoSandbox.Supervisor]

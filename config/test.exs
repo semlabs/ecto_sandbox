@@ -16,4 +16,5 @@ config :ecto_sandbox, EctoSandbox.Repo,
   password: "postgres",
   database: "postgres",
   hostname: "postgres",
+  port: "5433",
   pool: Ecto.Adapters.SQL.Sandbox
