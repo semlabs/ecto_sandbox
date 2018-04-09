@@ -1,47 +1,38 @@
 defmodule EctoSandbox.Test do
-  use EctoSandbox.DataCase
+  use EctoSandboxWeb.ConnCase
   alias EctoSandbox.Repo
   alias EctoSandbox.User
   alias Ecto.UUID
   alias EctoSandbox.ServerSupervisor
 
-  setup do
+  setup %{conn: conn} do
     server = UUID.generate()
 
+    conn =
+      conn
+      |> put_req_header("content-type", "application/json")
+
     {:ok, _pid} = ServerSupervisor.start_server(server)
-    {:ok, server: server}
+    {:ok, server: server, conn: conn}
   end
 
-  test "test async write", %{server: server} do
-    server
-    |> ServerSupervisor.get()
-    |> Server.store("1")
+  test "test async write", %{conn: conn, server: server} do
+    conn = post(conn, "/test", Poison.encode!(%{server: server, value: "1"}))
+
+    assert conn.status == 204
 
     assert %User{} = Repo.insert!(%User{name: "1.1"})
-    server
-    |> ServerSupervisor.get()
-    |> GenServer.stop()
   end
 
-  test "test wait", %{server: server} do
-    server
-    |> ServerSupervisor.get()
-    |> Server.store("2")
+  test "test wait", %{server: server, conn: conn} do
+    conn = post(conn, "/test", Poison.encode!(%{server: server, value: "2"}))
 
     assert %User{} = Repo.insert!(%User{name: "2.1"})
-    server
-    |> ServerSupervisor.get()
-    |> GenServer.stop()
   end
 
-  test "test three", %{server: server} do
-    server
-    |> ServerSupervisor.get()
-    |> Server.store("3")
+  test "test three", %{server: server, conn: conn} do
+    conn = post(conn, "/test", Poison.encode!(%{server: server, value: "3"}))
 
     assert %User{} = Repo.insert!(%User{name: "3.1"})
-    server
-    |> ServerSupervisor.get()
-    |> GenServer.stop()
   end
 end

@@ -5,7 +5,9 @@ defmodule EctoSandboxWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", EctoSandboxWeb do
+  scope "/", EctoSandboxWeb do
     pipe_through :api
+
+    post("/test", Controller, :store)
   end
 end
