@@ -17,4 +17,12 @@ defmodule EctoSandbox.ServerSupervisor do
   def terminate(pid) do
     GenServer.stop(pid)
   end
+
+  def start_server(name) do
+    Swarm.register_name(name, __MODULE__, :start_child, [name])
+  end
+
+  def get(name) do
+    Swarm.whereis_name(name)
+  end
 end

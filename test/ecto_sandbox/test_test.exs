@@ -6,28 +6,42 @@ defmodule EctoSandbox.Test do
   alias EctoSandbox.ServerSupervisor
 
   setup do
-    {:ok, pid} = ServerSupervisor.start_child(UUID.generate())
-    {:ok, server: pid}
+    server = UUID.generate()
+
+    {:ok, _pid} = ServerSupervisor.start_server(server)
+    {:ok, server: server}
   end
 
   test "test async write", %{server: server} do
-    Server.store(server, "1")
+    server
+    |> ServerSupervisor.get()
+    |> Server.store("1")
 
     assert %User{} = Repo.insert!(%User{name: "1.1"})
-    GenServer.stop(server)
+    server
+    |> ServerSupervisor.get()
+    |> GenServer.stop()
   end
 
   test "test wait", %{server: server} do
-    Server.store(server, "2")
+    server
+    |> ServerSupervisor.get()
+    |> Server.store("2")
 
     assert %User{} = Repo.insert!(%User{name: "2.1"})
-    GenServer.stop(server)
+    server
+    |> ServerSupervisor.get()
+    |> GenServer.stop()
   end
 
   test "test three", %{server: server} do
-    Server.store(server, "3")
+    server
+    |> ServerSupervisor.get()
+    |> Server.store("3")
 
     assert %User{} = Repo.insert!(%User{name: "3.1"})
-    GenServer.stop(server)
+    server
+    |> ServerSupervisor.get()
+    |> GenServer.stop()
   end
 end
