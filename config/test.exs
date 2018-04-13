@@ -17,4 +17,5 @@ config :ecto_sandbox, EctoSandbox.Repo,
   password: "semaphoredb",
   database: "ecto_sandbox_test",
   hostname: "0.0.0.0",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  ownership_log: :error
