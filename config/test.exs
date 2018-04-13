@@ -13,8 +13,8 @@ config :logger, level: :error
 # Configure your database
 config :ecto_sandbox, EctoSandbox.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("DB_USER") || "postgres",
-  password: System.get_env("DB_PASSWORD") || "postgres",
-  database: System.get_env("DB_NAME") || "ecto_sandbox_test",
-  hostname: System.get_env("DB_HOST") || "0.0.0.0",
+  username: "runner",
+  password: "semaphoredb",
+  database: "ecto_sandbox_test",
+  hostname: "0.0.0.0",
   pool: Ecto.Adapters.SQL.Sandbox
