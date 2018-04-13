@@ -11,8 +11,9 @@ config :ecto_sandbox,
 
 # Configures the endpoint
 config :ecto_sandbox, EctoSandboxWeb.Endpoint,
+  version: Mix.Project.config[:version],
   url: [host: "localhost"],
-  secret_key_base: "Jg6Yp6oGWx0Fww5avr+t2xqzsv+VfGHmpCk2sgOJMwUMTQwJOL3GA5Xt/OD7D7PI",
+  secret_key_base: "some_secret",
   render_errors: [view: EctoSandboxWeb.ErrorView, accepts: ~w(json)],
   pubsub: [name: EctoSandbox.PubSub,
            adapter: Phoenix.PubSub.PG2]
@@ -21,6 +22,9 @@ config :ecto_sandbox, EctoSandboxWeb.Endpoint,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+config :ecto_sandbox, EctoSandbox.Repo,
+  migration_primary_key: [id: :uuid, type: :uuid]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

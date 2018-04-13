@@ -1,7 +1,8 @@
-defmodule EctoSandbox.ServerSupervisor do
+defmodule EctoSandbox.Workers.Supervisor do
   use DynamicSupervisor
+  alias EctoSandbox.Workers.Worker
 
-  def start_link() do
+  def start_link(_) do
     DynamicSupervisor.start_link(__MODULE__, [], name: __MODULE__)
   end
 
@@ -9,20 +10,12 @@ defmodule EctoSandbox.ServerSupervisor do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
 
-  def start_child(server) do
-    spec = {Server, server: server}
+  def start_child(worker) do
+    spec = {Worker, worker: worker}
     DynamicSupervisor.start_child(__MODULE__, spec)
   end
 
   def terminate(pid) do
     GenServer.stop(pid)
-  end
-
-  def start_server(name) do
-    Swarm.register_name(name, __MODULE__, :start_child, [name])
-  end
-
-  def get(name) do
-    Swarm.whereis_name(name)
   end
 end

@@ -4,14 +4,22 @@ defmodule EctoSandbox.Mixfile do
   def project do
     [
       app: :ecto_sandbox,
-      version: "0.0.1",
-      elixir: "~> 1.4",
-      elixirc_paths: elixirc_paths(Mix.env),
-      compilers: [:phoenix, :gettext] ++ Mix.compilers,
-      start_permanent: Mix.env == :prod,
+      version: app_version(),
+      elixir: "~> 1.5",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers(),
+      start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
     ]
+  end
+
+  # Load version from local VERSION file
+  defp app_version() do
+    case File.read("VERSION") do
+      {:ok, body} -> String.trim(body)
+      {:error, _reason} -> "0.0.1+dev.local"
+    end
   end
 
   # Configuration for the OTP application.
@@ -26,7 +34,8 @@ defmodule EctoSandbox.Mixfile do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_),     do: ["lib"]
+  defp elixirc_paths(:dev), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
   #
@@ -37,9 +46,10 @@ defmodule EctoSandbox.Mixfile do
       {:phoenix_pubsub, "~> 1.0"},
       {:phoenix_ecto, "~> 3.2"},
       {:postgrex, ">= 0.0.0"},
-      {:gettext, "~> 0.11"},
+      {:gettext, "~> 0.14"},
       {:cowboy, "~> 1.0"},
-      {:swarm, "~> 3.1"},
+      {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
+      {:ex_unit_notifier, "~> 0.1", only: :test}
     ]
   end
 
@@ -53,7 +63,8 @@ defmodule EctoSandbox.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"],
+      format: ["format --check-equivalent"]
     ]
   end
 end

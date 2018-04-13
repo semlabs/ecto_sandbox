@@ -1,6 +1,5 @@
 defmodule EctoSandbox.Application do
   use Application
-  alias EctoSandbox.ServerSupervisor
 
   def start(_type, _args) do
     import Supervisor.Spec
@@ -8,7 +7,9 @@ defmodule EctoSandbox.Application do
     children = [
       supervisor(EctoSandbox.Repo, []),
       supervisor(EctoSandboxWeb.Endpoint, []),
-      supervisor(ServerSupervisor, [])
+      supervisor(EctoSandbox.Workers.Supervisor, [[]]),
+      supervisor(Phoenix.PubSub.PG2, [EctoSandbox.Notification.name(), []]),
+      worker(Registry, [[keys: :unique, name: Reg]])
     ]
 
     opts = [strategy: :one_for_one, name: EctoSandbox.Supervisor]

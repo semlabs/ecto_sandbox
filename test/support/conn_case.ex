@@ -26,13 +26,17 @@ defmodule EctoSandboxWeb.ConnCase do
     end
   end
 
-
   setup tags do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(EctoSandbox.Repo)
+
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(EctoSandbox.Repo, {:shared, self()})
     end
+
+    on_exit(fn ->
+      EctoSandbox.Test.WorkerCleaner.cleanup_dynamic_workers()
+    end)
+
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
-
 end

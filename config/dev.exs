@@ -7,7 +7,7 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :ecto_sandbox, EctoSandboxWeb.Endpoint,
-  http: [port: 4000],
+  http: [port: System.get_env("PORT") || 4000],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -30,7 +30,7 @@ config :ecto_sandbox, EctoSandboxWeb.Endpoint,
 # different ports.
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
+config :logger, :console, format: "[$level] $message\n", level: :info
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
@@ -39,8 +39,9 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :ecto_sandbox, EctoSandbox.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "postgres",
-  hostname: "0.0.0.0",
+  username: System.get_env("DB_USER") || "postgres",
+  password: System.get_env("DB_PASSWORD") || "postgres",
+  database: System.get_env("DB_NAME") || "ecto_sandbox_dev",
+  hostname: System.get_env("DB_HOST") || "0.0.0.0",
+  port: System.get_env("DB_PORT") || 5432,
   pool_size: 10
