@@ -33,10 +33,6 @@ defmodule EctoSandboxWeb.ConnCase do
       Ecto.Adapters.SQL.Sandbox.mode(EctoSandbox.Repo, {:shared, self()})
     end
 
-    on_exit(fn ->
-      EctoSandbox.Test.WorkerCleaner.cleanup_dynamic_workers()
-    end)
-
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end
