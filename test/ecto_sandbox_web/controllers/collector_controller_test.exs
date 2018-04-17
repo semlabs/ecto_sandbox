@@ -24,6 +24,7 @@ defmodule EctoSandboxWeb.CollectorControllerTest do
 
     assert conn.status == 201
     assert_receive {:chunk_stored, "stored"}
+    IO.puts("Finished test 1")
   after
     WorkerCleaner.cleanup_dynamic_workers()
   end
@@ -33,6 +34,7 @@ defmodule EctoSandboxWeb.CollectorControllerTest do
 
     assert conn.status == 201
     assert_receive {:chunk_stored, "stored"}
+    IO.puts("Finished test 2")
   after
     WorkerCleaner.cleanup_dynamic_workers()
   end
@@ -42,6 +44,7 @@ defmodule EctoSandboxWeb.CollectorControllerTest do
 
     assert conn.status == 201
     assert_receive {:chunk_stored, "stored"}
+    IO.puts("Finished test 3")
   after
     WorkerCleaner.cleanup_dynamic_workers()
   end
