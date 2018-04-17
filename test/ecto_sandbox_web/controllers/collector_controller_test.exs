@@ -1,6 +1,7 @@
 defmodule EctoSandboxWeb.CollectorControllerTest do
   use EctoSandboxWeb.ConnCase
   alias EctoSandbox.Workers
+  alias EctoSandbox.Test.WorkerCleaner
 
   setup %{conn: conn} do
     {:ok, worker} =
@@ -23,6 +24,8 @@ defmodule EctoSandboxWeb.CollectorControllerTest do
 
     assert conn.status == 201
     assert_receive {:chunk_stored, "stored"}
+  after
+    WorkerCleaner.cleanup_dynamic_workers()
   end
 
   test "Test 2", %{conn: conn, worker: worker} do
@@ -30,6 +33,8 @@ defmodule EctoSandboxWeb.CollectorControllerTest do
 
     assert conn.status == 201
     assert_receive {:chunk_stored, "stored"}
+  after
+    WorkerCleaner.cleanup_dynamic_workers()
   end
 
   test "Test 3", %{conn: conn, worker: worker} do
@@ -37,5 +42,7 @@ defmodule EctoSandboxWeb.CollectorControllerTest do
 
     assert conn.status == 201
     assert_receive {:chunk_stored, "stored"}
+  after
+    WorkerCleaner.cleanup_dynamic_workers()
   end
 end
